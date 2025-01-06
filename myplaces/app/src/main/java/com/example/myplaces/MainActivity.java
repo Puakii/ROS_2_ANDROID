@@ -10,11 +10,14 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.media.MediaPlayer;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 
 public class MainActivity extends AppCompatActivity {
@@ -29,15 +32,29 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         LinearLayout buttonColumn = findViewById(R.id.button_column);
+
         for (int i = 0; i < buttonColumn.getChildCount(); i++) {
             View child = buttonColumn.getChildAt(i);
             if (child instanceof Button) {
                 child.setOnClickListener(new View.OnClickListener(){
+                    final MediaPlayer mp = MediaPlayer.create(child.getContext(), R.raw.excuseme);
                     @Override
                     public void onClick(View view) {
                         String tag = (String) view.getTag();
                         BackGroundTask b1 = new BackGroundTask(tag);
                         b1.execute();
+                        mp.start();
+//                        new Thread(new ClientThread(tag)).start();
+//                        new Thread(() -> {
+//                            try {
+//                                Socket socket = new Socket();
+//                                socket.connect(new InetSocketAddress("192.168.1.3", 5556), 5000); // 5-second timeout
+//                                Log.d("Network Test", "Server is reachable on port 6000");
+//                                socket.close();
+//                            } catch (IOException e) {
+//                                Log.d("Network Test", "Server is not reachable: " + e.getMessage());
+//                            }
+//                        }).start();
                     }
                 });
             }
@@ -58,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
             try {
                 if(s == null){
                     //change it to your IP
-                    s = new Socket("0.0.0.0",6000);
+                    s = new Socket("0.0.0.0",5556);
                     writer = new PrintWriter(s.getOutputStream());
                     Log.i("i", "CONNECTED");
                 }
