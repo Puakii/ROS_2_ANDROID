@@ -1,91 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".MainActivity"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp">
+    android:orientation="horizontal"
+    android:padding="8dp">
 
     <LinearLayout
-        android:id="@+id/button_column"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:id="@+id/button_column_left"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
         android:orientation="vertical"
-        android:gravity="center_horizontal"
-        android:padding="8dp">
+        android:gravity="start"
+        android:padding="4dp">
 
         <Button
             android:id="@+id/button1"
-            android:layout_width="300dp"
-            android:layout_height="80dp"
-            android:layout_margin="4dp"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:layout_height="0dp"
             android:tag="1"
+            android:textSize="20sp"
             android:text="1: Excuse Me" />
-
-        <Button
-            android:id="@+id/button2"
-            android:layout_width="300dp"
-            android:layout_height="80dp"
-            android:layout_margin="4dp"
-            android:tag="2"
-            android:text="2: On Your Left" />
 
         <Button
             android:id="@+id/button3"
-            android:layout_width="300dp"
-            android:layout_height="80dp"
-            android:layout_margin="4dp"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:layout_height="0dp"
+            android:tag="2"
+            android:textSize="20sp"
+            android:text="2: Attention, there's a robot here" />
+
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:layout_height="0dp"
             android:tag="3"
-            android:text="3: On Your Right" />
+            android:textSize="20sp"
+            android:text="3: On Your Left" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/button_column_right"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:gravity="start"
+        android:padding="4dp">
 
         <Button
             android:id="@+id/button4"
-            android:layout_width="300dp"
-            android:layout_height="80dp"
-            android:layout_margin="4dp"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:layout_height="0dp"
             android:tag="4"
-            android:text="1: Excuse Me" />
-
-        <Button
-            android:id="@+id/button5"
-            android:layout_width="300dp"
-            android:layout_height="80dp"
-            android:layout_margin="4dp"
-            android:tag="5"
-            android:text="1: Excuse Me" />
+            android:textSize="20sp"
+            android:text="4: Please give way" />
 
         <Button
             android:id="@+id/button6"
-            android:layout_width="300dp"
-            android:layout_height="80dp"
-            android:layout_margin="4dp"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:layout_height="0dp"
+            android:tag="5"
+            android:textSize="20sp"
+            android:text="5: Behind you" />
+
+        <Button
+            android:id="@+id/button5"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:layout_height="0dp"
             android:tag="6"
-            android:text="1: Excuse Me" />
-
-        <Button
-            android:id="@+id/button7"
-            android:layout_width="300dp"
-            android:layout_height="80dp"
-            android:layout_margin="4dp"
-            android:tag="7"
-            android:text="1: Excuse Me" />
-
-        <Button
-            android:id="@+id/button8"
-            android:layout_width="300dp"
-            android:layout_height="80dp"
-            android:layout_margin="4dp"
-            android:tag="8"
-            android:text="1: Excuse Me" />
-
-        <Button
-            android:id="@+id/button9"
-            android:layout_width="300dp"
-            android:layout_height="80dp"
-            android:layout_margin="4dp"
-            android:tag="9"
-            android:text="1: Excuse Me" />
+            android:textSize="20sp"
+            android:text="6: On Your Right"  />
 
     </LinearLayout>
-</ScrollView>
+
+</LinearLayout>
