@@ -3,82 +3,170 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal"
-    android:padding="8dp">
+    android:orientation="horizontal">
 
     <LinearLayout
-        android:id="@+id/button_column_left"
-        android:layout_width="0dp"
+        android:id="@+id/ip_address_layout"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1"
         android:orientation="vertical"
-        android:gravity="start"
-        android:padding="4dp">
+        android:padding="24dp"
+        android:gravity="center"
+        >
 
-        <Button
-            android:id="@+id/button1"
+        <EditText
+            android:id="@+id/ip_address_input"
             android:layout_width="match_parent"
-            android:layout_weight="1"
-            android:layout_height="0dp"
-            android:tag="1"
-            android:textSize="20sp"
-            android:text="1: Excuse Me" />
+            android:layout_height="wrap_content"
+            android:hint="Enter IP Address"
+            android:inputType="text"
+            android:layout_marginBottom="16dp"
+            android:padding="12dp"
+            android:background="@android:drawable/edit_text"
+            android:textAlignment="center"
+            android:text="192.168.123.18"
+            android:textSize="16sp"
+            android:textColor="@android:color/black"
+            android:textColorHint="@android:color/black"
+            android:gravity="center_horizontal" />
 
+        <!-- Submit Button -->
         <Button
-            android:id="@+id/button3"
-            android:layout_width="match_parent"
-            android:layout_weight="1"
-            android:layout_height="0dp"
-            android:tag="2"
+            android:id="@+id/submit_ip_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="CONNECT"
+            android:padding="12dp"
+            android:layout_marginBottom="16dp"
             android:textSize="20sp"
-            android:text="2: Attention, there's a robot here" />
+            android:layout_gravity="center" />
 
-        <Button
-            android:id="@+id/button2"
-            android:layout_width="match_parent"
-            android:layout_weight="1"
-            android:layout_height="0dp"
-            android:tag="3"
-            android:textSize="20sp"
-            android:text="3: On Your Left" />
+        <!-- CONNECTED Message -->
+        <TextView
+            android:id="@+id/connected_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="CONNECTED"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/holo_green_dark"
+            android:visibility="gone" />
 
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/button_column_right"
-        android:layout_width="0dp"
+        android:id="@+id/button_layout"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:orientation="vertical"
-        android:gravity="start"
-        android:padding="4dp">
+        android:orientation="horizontal"
+        android:padding="8dp"
+        android:visibility="gone"
+        >
 
-        <Button
-            android:id="@+id/button4"
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:id="@+id/button_column_left"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:layout_height="0dp"
-            android:tag="4"
-            android:textSize="20sp"
-            android:text="4: Please give way" />
+            android:layout_marginEnd="16dp"
+            android:orientation="vertical"
+            android:gravity="start"
+            android:padding="4dp">
 
-        <Button
-            android:id="@+id/button6"
-            android:layout_width="match_parent"
-            android:layout_weight="1"
-            android:layout_height="0dp"
-            android:tag="5"
-            android:textSize="20sp"
-            android:text="5: Behind you" />
+            <Button
+                android:id="@+id/button0"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="0dp"
+                android:tag="0"
+                android:textSize="20sp"
+                android:text="0: Sync" />
 
-        <Button
-            android:id="@+id/button5"
-            android:layout_width="match_parent"
+            <Button
+                android:id="@+id/buttonNeg1"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="0dp"
+                android:tag="-1"
+                android:textSize="20sp"
+                android:text="-1: Discard" />
+
+            <Button
+                android:id="@+id/buttonNeg2"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="0dp"
+                android:tag="-2"
+                android:textSize="20sp"
+                android:text="-2: Begin" />
+
+            <Button
+                android:id="@+id/buttonNeg3"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="0dp"
+                android:tag="-3"
+                android:textSize="20sp"
+                android:text="-3: End" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/button_column_right"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:layout_height="0dp"
-            android:tag="6"
-            android:textSize="20sp"
-            android:text="6: On Your Right"  />
+            android:orientation="vertical"
+            android:layout_marginStart="16dp"
+            android:gravity="start"
+            android:padding="4dp">
+
+            <Button
+                android:id="@+id/button1"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="0dp"
+                android:tag="1"
+                android:textSize="20sp"
+                android:text="1: Excuse Me" />
+
+            <Button
+                android:id="@+id/button2"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="0dp"
+                android:tag="2"
+                android:textSize="20sp"
+                android:text="2: Attention, robot here" />
+
+            <Button
+                android:id="@+id/button3"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="0dp"
+                android:tag="3"
+                android:textSize="20sp"
+                android:text="3: Please give way" />
+
+            <Button
+                android:id="@+id/button4"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="0dp"
+                android:tag="4"
+                android:textSize="20sp"
+                android:text="4: On Your Left" />
+
+            <Button
+                android:id="@+id/button5"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="0dp"
+                android:tag="5"
+                android:textSize="20sp"
+                android:text="5: On Your Right"  />
+
+        </LinearLayout>
 
     </LinearLayout>
 

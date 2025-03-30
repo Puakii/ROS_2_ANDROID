@@ -1,11 +1,15 @@
 package com.example.myplaces;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.transition.Visibility;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -13,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.media.MediaPlayer;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.IOException;
@@ -20,6 +25,9 @@ import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
+import java.util.Map;
+import java.util.concurrent.TimeoutException;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -27,17 +35,70 @@ public class MainActivity extends AppCompatActivity {
     Socket s;
     PrintWriter writer;
 
+    public MainActivity() {
+    }
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         hideSystemUI();
 
-        LinearLayout leftButtonColumn = findViewById(R.id.button_column_left);
-        initiateButtons(leftButtonColumn);
-        LinearLayout rightButtonColumn = findViewById(R.id.button_column_right);
-        initiateButtons(rightButtonColumn);
+        LinearLayout ipLayout = findViewById(R.id.ip_address_layout);
+        Button submitButton = findViewById(R.id.submit_ip_button);
+        EditText ipInput = findViewById(R.id.ip_address_input);
+
+        submitButton.setOnClickListener(v -> {
+            submitButton.setEnabled(false);
+            String ipAddress = ipInput.getText().toString();
+            s = new Socket();
+            new Thread(() -> {
+                try {
+                    s.connect(new InetSocketAddress(ipAddress,5556), 5000);
+                    writer = new PrintWriter(s.getOutputStream());
+                    Log.i("i", "CONNECTED");
+                    runOnUiThread(() -> {
+                        submitButton.setVisibility(View.GONE);
+                        TextView tv = findViewById(R.id.connected_message);
+                        tv.setText(getResources().getText(R.string.connected));
+                        tv.setTextColor(getResources().getColor(R.color.green));
+                        tv.setVisibility(View.VISIBLE);
+
+                        // Delay for 2 seconds, then transition to the buttons screen
+                        new android.os.Handler().postDelayed(() -> {
+                            ipLayout.setVisibility(View.GONE);
+                            findViewById(R.id.button_layout).setVisibility(View.VISIBLE);
+                            LinearLayout leftButtonColumn = findViewById(R.id.button_column_left);
+                            initiateButtons(leftButtonColumn);
+                            LinearLayout rightButtonColumn = findViewById(R.id.button_column_right);
+                            initiateButtons(rightButtonColumn);
+                        }, 200); // 2000 milliseconds = 2 seconds
+                    });
+                } catch (IOException e) {
+                    runOnUiThread(() -> {
+                        TextView tv = findViewById(R.id.connected_message);
+                        tv.setTextColor(getResources().getColor(R.color.red));
+                        tv.setText(getResources().getText(R.string.ioexception));
+                        tv.setVisibility(View.VISIBLE);
+                        new android.os.Handler().postDelayed((
+                        ) -> {
+                            tv.setVisibility(View.GONE);
+                            submitButton.setEnabled(true);
+                        }, 500);
+
+                    });
+                    if (s != null) {
+                        try {
+                            s.close();
+                        } catch (IOException ex) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }).start();
+        });
+
 
     }
 
@@ -55,6 +116,7 @@ public class MainActivity extends AppCompatActivity {
                         | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                         | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // Hides navigation bar
                         | View.SYSTEM_UI_FLAG_FULLSCREEN);   // Hides status bar
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
 
     @Override
@@ -63,35 +125,39 @@ public class MainActivity extends AppCompatActivity {
         hideSystemUI(); // Reapply immersive mode when activity resumes
     }
 
+
     private void initiateButtons(LinearLayout buttonColumn) {
         for (int i = 0; i < buttonColumn.getChildCount(); i++) {
             View child = buttonColumn.getChildAt(i);
             if (child instanceof Button) {
+
                 child.setOnClickListener(new View.OnClickListener(){
                     String tag = (String) child.getTag();
+                    final MediaPlayer mp = getMediaPlayer(tag);
 
-                    final MediaPlayer mp = MediaPlayer.create(child.getContext(), getAudio(tag));
-
-                    private int getAudio(String tag) {
-                        if (tag.equals("1")) {
-                            return R.raw.excuseme;
-                        } else if (tag.equals("2")) {
-                            return R.raw.attention;
-                        } else if (tag.equals("3")) {
-                            return R.raw.left;
-                        } else if (tag.equals("4")) {
-                            return R.raw.giveway;
-                        } else if (tag.equals("5")) {
-                            return R.raw.behind;
-                        } else {
-                            return R.raw.right;
+                    private MediaPlayer getMediaPlayer(String tag) {
+                        switch (tag) {
+                            case "1":
+                                return MediaPlayer.create(child.getContext(), R.raw.excuseme);
+                            case "2":
+                                return MediaPlayer.create(child.getContext(), R.raw.attention);
+                            case "3":
+                                return MediaPlayer.create(child.getContext(), R.raw.giveway);
+                            case "4":
+                                return MediaPlayer.create(child.getContext(), R.raw.left);
+                            case "5":
+                                return MediaPlayer.create(child.getContext(), R.raw.right);
+                            default:
+                                return null;
                         }
                     }
                     @Override
                     public void onClick(View view) {
                         BackGroundTask b1 = new BackGroundTask(tag);
                         b1.execute();
-                        mp.start();
+                        if (mp != null) {
+                            mp.start();
+                        }
 //                        new Thread(() -> {
 //                            try {
 //                                Socket socket = new Socket();
@@ -117,20 +183,11 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected Void doInBackground(String... voids) {
-            try {
-                if(s == null){
-                    //change it to your IP
-                    s = new Socket("192.168.123.18",5556);
-                    writer = new PrintWriter(s.getOutputStream());
-                    Log.i("i", "CONNECTED");
-                }
+            synchronized (writer) {
                 writer.write(message);
                 writer.flush();
-                //writer.close();
             }
-            catch (IOException e) {
-                e.printStackTrace();
-            }
+            //writer.close();
             return null;
         }
     }

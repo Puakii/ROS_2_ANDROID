@@ -3,10 +3,10 @@ apply plugin: 'com.android.application'
 android {
     namespace "com.example.myplaces"
     compileSdkVersion 34
-    buildToolsVersion "29.0.2"
+    buildToolsVersion "33.0.1"
     defaultConfig {
         applicationId "com.example.myplaces"
-        minSdkVersion 14
+        minSdkVersion 21
         targetSdkVersion 34
         versionCode 1
         versionName "1.0"
@@ -26,11 +26,11 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
-    testImplementation 'junit:junit:4.13'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.2.0'
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.2.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.1'
     implementation files('libs/opencsv-5.0.jar')
     implementation 'org.apache.commons:commons-lang3:3.8'
 }
