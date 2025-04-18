@@ -20,7 +20,9 @@ import android.media.MediaPlayer;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
@@ -33,6 +35,11 @@ public class MainActivity extends AppCompatActivity {
 
 
     Socket s;
+    private Socket monitorSocket;
+    private BufferedReader monitorReader;
+    private volatile long lastMonitorReceiveTime = 0;
+    private final Handler monitorHandler = new Handler();
+    private Runnable monitorRunnable;
     PrintWriter writer;
 
     public MainActivity() {
@@ -48,16 +55,48 @@ public class MainActivity extends AppCompatActivity {
         LinearLayout ipLayout = findViewById(R.id.ip_address_layout);
         Button submitButton = findViewById(R.id.submit_ip_button);
         EditText ipInput = findViewById(R.id.ip_address_input);
+        LinearLayout buttonLayout = findViewById(R.id.button_layout);
 
         submitButton.setOnClickListener(v -> {
             submitButton.setEnabled(false);
             String ipAddress = ipInput.getText().toString();
             s = new Socket();
+            monitorSocket = new Socket();
             new Thread(() -> {
                 try {
                     s.connect(new InetSocketAddress(ipAddress,5556), 5000);
                     writer = new PrintWriter(s.getOutputStream());
                     Log.i("i", "CONNECTED");
+                    monitorSocket.connect(new InetSocketAddress(ipAddress, 5557), 5000); // <-- different port
+                    monitorReader = new BufferedReader(new InputStreamReader(monitorSocket.getInputStream()));
+                    lastMonitorReceiveTime = System.currentTimeMillis();
+                    new Thread(() -> {
+                        String line;
+                        try {
+                            while ((line = monitorReader.readLine()) != null) {
+                                lastMonitorReceiveTime = System.currentTimeMillis();
+                                Log.i("Monitor", "Received: " + line);
+                            }
+                        } catch (IOException e) {
+                            Log.e("Monitor", "Monitor socket closed");
+                        }
+                    }).start();
+                    monitorRunnable = new Runnable() {
+                        @Override
+                        public void run() {
+                            long now = System.currentTimeMillis();
+                            if (monitorSocket == null || monitorSocket.isClosed() || !monitorSocket.isConnected() || now - lastMonitorReceiveTime > 10_000) {
+                                runOnUiThread(() -> {
+                                    TextView tv = findViewById(R.id.statusButton);
+                                    tv.setTextColor(getResources().getColor(R.color.red));
+                                    tv.setText(getResources().getText(R.string.badStatus));
+                                });
+                            } else {
+                                monitorHandler.postDelayed(this, 2000);
+                            }
+                        }
+                    };
+                    monitorHandler.postDelayed(monitorRunnable, 10000);
                     runOnUiThread(() -> {
                         submitButton.setVisibility(View.GONE);
                         TextView tv = findViewById(R.id.connected_message);
@@ -68,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
                         // Delay for 2 seconds, then transition to the buttons screen
                         new android.os.Handler().postDelayed(() -> {
                             ipLayout.setVisibility(View.GONE);
-                            findViewById(R.id.button_layout).setVisibility(View.VISIBLE);
+                            buttonLayout.setVisibility(View.VISIBLE);
                             LinearLayout leftButtonColumn = findViewById(R.id.button_column_left);
                             initiateButtons(leftButtonColumn);
                             LinearLayout rightButtonColumn = findViewById(R.id.button_column_right);
@@ -91,6 +130,13 @@ public class MainActivity extends AppCompatActivity {
                     if (s != null) {
                         try {
                             s.close();
+                        } catch (IOException ex) {
+                            e.printStackTrace();
+                        }
+                    }
+                    if (monitorSocket != null) {
+                        try {
+                            monitorSocket.close();
                         } catch (IOException ex) {
                             e.printStackTrace();
                         }

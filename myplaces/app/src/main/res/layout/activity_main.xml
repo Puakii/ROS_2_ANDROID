@@ -12,6 +12,7 @@
         android:orientation="vertical"
         android:padding="24dp"
         android:gravity="center"
+        android:visibility="gone"
         >
 
         <EditText
@@ -60,7 +61,6 @@
         android:layout_height="match_parent"
         android:orientation="horizontal"
         android:padding="8dp"
-        android:visibility="gone"
         >
 
         <LinearLayout
@@ -110,6 +110,16 @@
                 android:text="-3: End" />
 
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/statusButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Status: NOT OK"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/holo_red_light"
+            android:layout_gravity="center" />
 
         <LinearLayout
             android:id="@+id/button_column_right"

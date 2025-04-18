@@ -13,4 +13,5 @@
     <string name="send">send msg</string>
     <string name="number">-</string>
     <string name="ioexception">Error has occurred. Please try again.</string>
+    <string name="badStatus">Status: Not OK</string>
 </resources>
