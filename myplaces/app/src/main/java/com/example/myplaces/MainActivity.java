@@ -144,9 +144,11 @@ public class MainActivity extends AppCompatActivity {
                             case "3":
                                 return MediaPlayer.create(child.getContext(), R.raw.giveway);
                             case "4":
-                                return MediaPlayer.create(child.getContext(), R.raw.left);
+                                return MediaPlayer.create(child.getContext(), R.raw.openramp);
                             case "5":
-                                return MediaPlayer.create(child.getContext(), R.raw.right);
+                                return MediaPlayer.create(child.getContext(), R.raw.proceed);
+                            case "6":
+                                return MediaPlayer.create(child.getContext(), R.raw.boardbus);
                             default:
                                 return null;
                         }

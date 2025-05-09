@@ -155,7 +155,7 @@
                 android:layout_height="0dp"
                 android:tag="4"
                 android:textSize="20sp"
-                android:text="4: On Your Left" />
+                android:text="4: Please open the ramp" />
 
             <Button
                 android:id="@+id/button5"
@@ -164,7 +164,16 @@
                 android:layout_height="0dp"
                 android:tag="5"
                 android:textSize="20sp"
-                android:text="5: On Your Right"  />
+                android:text="5: Please proceed"  />
+
+            <Button
+                android:id="@+id/button6"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="0dp"
+                android:tag="6"
+                android:textSize="20sp"
+                android:text="6: I am boarding the bus"  />
 
         </LinearLayout>
 
